@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Logs
 logs
 *.log
@@ -43,3 +44,62 @@ backend/__pycache__/
 backend/**/__pycache__/
 backend/**/*.py[cod]
 backend/db.sqlite3
+=======
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv/
+
+# Environment variables
+.env
+.env.local
+
+# Databases
+*.sqlite3
+*.db
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+
+# Python virtual environments
+venv/
+.venv/
+erp_venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*.sqlite3
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.json
+!package.json
+
+# Frontend dependencies and builds
+node_modules/
+dist/
+build/
+
+# IDE and OS files
+.vscode/
+.idea/
+.DS_Store
+>>>>>>> a7719f6006e3abb0cae867cb66ccbc7dfc636b4e

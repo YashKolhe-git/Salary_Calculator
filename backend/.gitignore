@@ -5,15 +5,18 @@ __pycache__/
 *.so
 .Python
 
-# Virtual Environment
+# Virtual environments
 venv/
 env/
 ENV/
 .venv/
 
-# Environment variables
+# Environment variables and secrets
 .env
-.env.local
+.env.*
+!.env.example
+!.env.*.example
+backend/.env
 
 # Databases
 *.sqlite3
@@ -21,30 +24,6 @@ ENV/
 
 # Logs
 *.log
-
-# IDE
-.vscode/
-.idea/
-
-
-# Python virtual environments
-venv/
-.venv/
-erp_venv/
-env/
-
-# Python
-__pycache__/
-*.py[cod]
-*.sqlite3
-
-# Environment variables and secrets
-.env
-.env.*
-!.env.example
-!.env.*.example
-*.json
-!package.json
 
 # Frontend dependencies and builds
 node_modules/
