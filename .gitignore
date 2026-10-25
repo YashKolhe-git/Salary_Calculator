@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Logs
 logs
 *.log
@@ -8,35 +7,28 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-.output
-.vinxi
+# Frontend dependencies and build outputs
+node_modules/
+dist/
+dist-ssr/
+.output/
+.vinxi/
 .tanstack/**
-.nitro
-# Environment files
+.nitro/
+
+# Environment files and secrets
 .env
 .env.local
 .env.*.local
 *.local
+!.env.example
+!.env.*.example
 
 # Wrangler / Cloudflare
 .wrangler/
 .dev.vars
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-# Django backend
+# Django backend (backend/ is the only Django tree)
 backend/.env
 backend/venv/
 backend/.venv/
@@ -44,62 +36,28 @@ backend/__pycache__/
 backend/**/__pycache__/
 backend/**/*.py[cod]
 backend/db.sqlite3
-=======
-# Python
+backend/*.sqlite3
+
+# Python (any stray caches at repo root)
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
-
-# Virtual Environment
 venv/
 env/
 ENV/
 .venv/
-
-# Environment variables
-.env
-.env.local
-
-# Databases
 *.sqlite3
 *.db
 
-# Logs
-*.log
-
-# IDE
-.vscode/
-.idea/
-
-
-# Python virtual environments
-venv/
-.venv/
-erp_venv/
-env/
-
-# Python
-__pycache__/
-*.py[cod]
-*.sqlite3
-
-# Environment variables and secrets
-.env
-.env.*
-!.env.example
-!.env.*.example
-*.json
-!package.json
-
-# Frontend dependencies and builds
-node_modules/
-dist/
-build/
-
-# IDE and OS files
-.vscode/
+# Editor and OS
+.vscode/*
+!.vscode/extensions.json
 .idea/
 .DS_Store
->>>>>>> a7719f6006e3abb0cae867cb66ccbc7dfc636b4e
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
