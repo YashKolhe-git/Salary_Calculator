@@ -25,3 +25,33 @@ ENV/
 # IDE
 .vscode/
 .idea/
+
+
+# Python virtual environments
+venv/
+.venv/
+erp_venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*.sqlite3
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.json
+!package.json
+
+# Frontend dependencies and builds
+node_modules/
+dist/
+build/
+
+# IDE and OS files
+.vscode/
+.idea/
+.DS_Store

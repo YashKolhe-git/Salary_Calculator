@@ -291,9 +291,9 @@ export function WorkEntryDialog({
             </div>
             <Button
               type="button"
-              variant="ghost"
+              variant="outline"
               size="xl"
-              className="w-full text-primary"
+              className="w-full"
               onClick={() => {
                 onOpenChange(false);
                 navigate({ to: "/employees/$id", params: { id: employee.id } });

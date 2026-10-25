@@ -147,7 +147,9 @@ function LogsPage() {
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <Button size="xl" onClick={() => setApplied({ from, to })}>Apply Filter</Button>
-                <Button size="xl" variant="outline" onClick={() => { setFrom(""); setTo(""); setApplied({ from: "", to: "" }); }}>Show All</Button>
+                <Button size="xl" variant="outline" onClick={() => { setFrom(""); setTo(""); setApplied({ from: "", to: "" }); }}>
+                  Show All
+                </Button>
               </div>
             </div>
 

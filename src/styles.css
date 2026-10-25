@@ -19,6 +19,8 @@
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-active: var(--primary-active);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
@@ -40,31 +42,33 @@
 
 :root {
   --radius: 0.75rem;
-  /* White canvas, charcoal text, light red borders */
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.24 0.01 30);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.24 0.01 30);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.24 0.01 30);
-  --primary: oklch(0.54 0.17 25);
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.975 0.012 20);
-  --secondary-foreground: oklch(0.3 0.03 25);
-  --muted: oklch(0.975 0.008 20);
-  --muted-foreground: oklch(0.48 0.015 30);
-  --accent: oklch(0.965 0.02 20);
-  --accent-foreground: oklch(0.35 0.08 25);
-  --destructive: oklch(0.55 0.2 27);
-  --destructive-foreground: oklch(1 0 0);
+  /* Warm Cream, Dark Chocolate, Brick Red */
+  --background: #fff9ed;
+  --foreground: #38271f;
+  --card: #ffffff;
+  --card-foreground: #38271f;
+  --popover: #ffffff;
+  --popover-foreground: #38271f;
+  --primary: #b43628;
+  --primary-foreground: #ffffff;
+  --primary-hover: #9a2e23;
+  --primary-active: #872821;
+  --secondary: #fff9ed;
+  --secondary-foreground: #38271f;
+  --muted: #f5edd8;
+  --muted-foreground: #6b5a52;
+  --accent: #f0e6d4;
+  --accent-foreground: #38271f;
+  --destructive: #9e2e22;
+  --destructive-foreground: #ffffff;
   --success: oklch(0.48 0.12 150);
-  --success-soft: oklch(0.95 0.04 150);
-  --warning: oklch(0.52 0.16 35);
-  --warning-soft: oklch(0.95 0.035 30);
-  --border: oklch(0.88 0.055 20);
-  --input: oklch(0.86 0.06 20);
-  --ring: oklch(0.65 0.14 22);
-  --shadow-soft: 0 1px 2px oklch(0.5 0.1 25 / 0.06), 0 4px 14px -6px oklch(0.5 0.1 25 / 0.12);
+  --success-soft: oklch(0.96 0.04 150);
+  --warning: #b43628;
+  --warning-soft: #fdeee9;
+  --border: #e8dfd0;
+  --input: #ddd2c2;
+  --ring: #b43628;
+  --shadow-soft: 0 1px 2px rgb(56 39 31 / 0.06), 0 4px 14px -6px rgb(56 39 31 / 0.12);
 }
 
 @layer base {
@@ -80,3 +84,4 @@
     font-family: var(--font-sans);
   }
 }
+

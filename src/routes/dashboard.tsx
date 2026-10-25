@@ -4,7 +4,6 @@ import { toast } from "sonner";
 import {
   ClipboardPen,
   CreditCard,
-  History,
   Loader2,
   MoreVertical,
   Pencil,
@@ -12,6 +11,7 @@ import {
   RotateCcw,
   Search,
   Trash2,
+  User,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -45,6 +45,54 @@ import { workRecordService } from "@/services/workRecordService";
 import type { DashboardFinancialSummary, Employee, EmployeeBalanceSummary, WorkRecord } from "@/types";
 import { formatINR, formatLongToday, formatWage } from "@/utils/format";
 import { cn } from "@/lib/utils";
+
+const employeeActionBtn =
+  "h-auto min-h-10 w-full py-2 px-1.5 text-xs leading-snug whitespace-normal sm:text-sm [&_svg]:size-4";
+
+function EmployeeCardActions({
+  employeeId,
+  showWorkEntry,
+  onWorkEntry,
+  onRecordPayment,
+  paymentLoading,
+  showRecordPayment = true,
+}: {
+  employeeId: string;
+  showWorkEntry?: boolean;
+  onWorkEntry?: () => void;
+  onRecordPayment: () => void;
+  paymentLoading: boolean;
+  showRecordPayment?: boolean;
+}) {
+  const showWork = Boolean(showWorkEntry && onWorkEntry);
+  const showPay = showRecordPayment;
+  const detailsSpansFullRow = (showWork && showPay) || (!showWork && !showPay);
+
+  return (
+    <div className="mt-3 grid grid-cols-2 gap-2">
+      {showWork ? (
+        <Button className={employeeActionBtn} onClick={onWorkEntry}>
+          <ClipboardPen /> Enter Today&apos;s Work
+        </Button>
+      ) : null}
+      {showPay ? (
+        <Button className={employeeActionBtn} onClick={onRecordPayment} disabled={paymentLoading}>
+          {paymentLoading ? <Loader2 className="animate-spin" /> : <CreditCard />}
+          Record Payment
+        </Button>
+      ) : null}
+      <Button
+        variant="outline"
+        className={cn(employeeActionBtn, detailsSpansFullRow && "col-span-2")}
+        asChild
+      >
+        <Link to="/employees/$id" params={{ id: employeeId }}>
+          <User /> View Details
+        </Link>
+      </Button>
+    </div>
+  );
+}
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
@@ -177,15 +225,22 @@ function Dashboard() {
   const t = q.trim().toLowerCase();
   const activeEmployees = state.employees.filter((e) => e.isActive && e.name.toLowerCase().includes(t));
   const inactiveEmployees = state.employees.filter((e) => !e.isActive && e.name.toLowerCase().includes(t));
-  const pendingPayments = Object.values(balances).filter((b) => b.outstandingBalance > 0);
-
   return (
     <div className="min-h-dvh">
       <AppHeader />
       <main className="mx-auto max-w-5xl space-y-5 px-4 py-5">
         <section>
-          <h1 className="text-2xl font-bold">Employees</h1>
-          <p className="text-muted-foreground">Manage employees, working hours, and daily wages.</p>
+          <div className="flex min-w-0 items-center gap-2.5">
+            <img
+              src="/rupali-snacks-logo.png"
+              alt=""
+              width={44}
+              height={44}
+              decoding="async"
+              className="size-9 shrink-0 object-contain sm:size-10 md:size-11"
+            />
+            <h1 className="min-w-0 truncate text-2xl font-bold">Rupali Snacks</h1>
+          </div>
           <p className="mt-1 text-sm font-medium text-primary">{ready ? formatLongToday() : "\u00a0"}</p>
         </section>
 
@@ -206,54 +261,26 @@ function Dashboard() {
           )}
 
           {!summaryError && summary && (
-            <div className="space-y-3">
-              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
-                <div className="rounded-xl border-2 border-border bg-card p-3 shadow-card">
-                  <p className="text-xs text-muted-foreground sm:text-sm">Employees</p>
-                  <p className="break-words text-lg font-bold sm:text-xl">
-                    {summary.activeEmployees}
-                    <span className="text-xs font-normal text-muted-foreground"> / {summary.totalEmployees}</span>
-                  </p>
-                </div>
-                <div className="rounded-xl border-2 border-border bg-card p-3 shadow-card">
-                  <p className="text-xs text-muted-foreground sm:text-sm">Work Recorded</p>
-                  <p className="break-words text-lg font-bold sm:text-xl">{summary.workRecordCount} days</p>
-                </div>
-                <div className="rounded-xl border-2 border-border bg-card p-3 shadow-card">
-                  <p className="text-xs text-muted-foreground sm:text-sm">Total Earnings</p>
-                  <p className="break-words text-lg font-bold sm:text-xl">{formatINR(summary.totalEarnings)}</p>
-                </div>
-                <div className="rounded-xl border-2 border-border bg-card p-3 shadow-card">
-                  <p className="text-xs text-muted-foreground sm:text-sm">Total Paid</p>
-                  <p className="break-words text-lg font-bold text-success sm:text-xl">{formatINR(summary.totalPaid)}</p>
-                </div>
-                <div className="col-span-2 rounded-xl border-2 border-border bg-card p-3 shadow-card sm:col-span-1">
-                  <p className="text-xs text-muted-foreground sm:text-sm">Outstanding Balance</p>
-                  <p className="break-words text-lg font-bold text-warning sm:text-xl">{formatINR(summary.outstandingBalance)}</p>
-                </div>
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+              <div className="rounded-xl border-2 border-border bg-card p-3 shadow-card">
+                <p className="text-xs text-muted-foreground sm:text-sm">Total Salary</p>
+                <p className="break-words text-lg font-bold sm:text-xl">{formatINR(summary.totalEarnings)}</p>
               </div>
-
-              {summary.workRecordCount > 0 && (
-                <div className="flex flex-wrap items-center gap-2 rounded-xl border-2 border-border bg-card p-3 text-sm">
-                  <span className="font-semibold text-muted-foreground">Status Breakdown:</span>
-                  <span className="inline-flex items-center gap-1 rounded-full border border-success/30 bg-success-soft px-2.5 py-0.5 text-xs font-semibold text-success">
-                    {summary.paidRecordCount} Paid
-                  </span>
-                  <span className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary">
-                    {summary.partiallyPaidRecordCount} Partially Paid
-                  </span>
-                  <span className="inline-flex items-center gap-1 rounded-full border border-warning/30 bg-warning-soft px-2.5 py-0.5 text-xs font-semibold text-warning">
-                    {summary.unpaidRecordCount} Unpaid
-                  </span>
-                </div>
-              )}
+              <div className="rounded-xl border-2 border-border bg-card p-3 shadow-card">
+                <p className="text-xs text-muted-foreground sm:text-sm">Total Paid</p>
+                <p className="break-words text-lg font-bold text-success sm:text-xl">{formatINR(summary.totalPaid)}</p>
+              </div>
+              <div className="col-span-2 rounded-xl border-2 border-border bg-card p-3 shadow-card sm:col-span-1">
+                <p className="text-xs text-muted-foreground sm:text-sm">Total Outstanding</p>
+                <p className="break-words text-lg font-bold text-warning sm:text-xl">{formatINR(summary.outstandingBalance)}</p>
+              </div>
             </div>
           )}
         </section>
 
         <div className="grid gap-3 sm:grid-cols-2">
           <Button size="xl" onClick={() => { setEditing(undefined); setAddOpen(true); }}><Plus /> Add Employee</Button>
-          <Button size="xl" variant="outline" className="border-2 border-primary/40 text-primary" onClick={() => setWageOpen(true)}><Plus /> Add Wage</Button>
+          <Button size="xl" onClick={() => setWageOpen(true)}><Plus /> Add Wage</Button>
         </div>
 
         <div className="relative">
@@ -280,10 +307,15 @@ function Dashboard() {
 
             <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {ready && activeEmployees.map((e) => (
-                <li key={e.id} className="flex flex-col rounded-xl border-2 border-border bg-card p-4 shadow-card">
+                <li key={e.id} className="flex flex-col rounded-xl border-2 border-border bg-card p-3 shadow-card sm:p-4">
                   <div className="flex items-start justify-between gap-2">
                     <button type="button" onClick={() => setWorkFor(e)} className="min-w-0 text-left">
-                      <h2 className="break-words text-lg font-bold leading-snug">{e.name}</h2>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h2 className="break-words text-lg font-bold leading-snug">{e.name}</h2>
+                        <span className="rounded-full border border-success/30 bg-success-soft px-2 py-0.5 text-xs font-semibold text-success">
+                          Active
+                        </span>
+                      </div>
                       {e.workProfile && <p className="text-sm text-muted-foreground">Work profile: {e.workProfile}</p>}
                     </button>
                     <DropdownMenu>
@@ -296,18 +328,19 @@ function Dashboard() {
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
-                  <p className="mt-2 text-base">
+                  <p className="mt-2 text-sm sm:text-base">
                     Assigned wage: <span className="font-semibold">{formatWage(e.wageAmount, e.wageType)}</span>
                     <span className="ml-2 rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground">
                       {e.wageSource === "global" ? "Common" : "Individual"}
                     </span>
                   </p>
-                  <div className="mt-4 grid gap-2">
-                    <Button size="xl" onClick={() => setWorkFor(e)}><ClipboardPen /> Enter Today's Work</Button>
-                    <Button size="xl" variant="outline" asChild>
-                      <Link to="/employees/$id" params={{ id: e.id }}><History /> View Logs</Link>
-                    </Button>
-                  </div>
+                  <EmployeeCardActions
+                    employeeId={e.id}
+                    showWorkEntry
+                    onWorkEntry={() => setWorkFor(e)}
+                    onRecordPayment={() => handleRecordPaymentForEmployee(e.id)}
+                    paymentLoading={payingEmpId === e.id}
+                  />
                 </li>
               ))}
             </ul>
@@ -373,20 +406,13 @@ function Dashboard() {
                       </div>
                     </div>
 
-                    <div className="mt-4 grid gap-2">
-                      {outstanding > 0 && (
-                        <Button
-                          size="xl"
-                          onClick={() => handleRecordPaymentForEmployee(e.id)}
-                          disabled={payingEmpId === e.id}
-                        >
-                          {payingEmpId === e.id ? <Loader2 className="animate-spin" /> : <CreditCard />} Record Payment
-                        </Button>
-                      )}
-                      <Button size="xl" variant="outline" asChild>
-                        <Link to="/employees/$id" params={{ id: e.id }}><History /> View Logs</Link>
-                      </Button>
-                    </div>
+                    <EmployeeCardActions
+                      employeeId={e.id}
+                      showWorkEntry={false}
+                      onRecordPayment={() => handleRecordPaymentForEmployee(e.id)}
+                      paymentLoading={payingEmpId === e.id}
+                      showRecordPayment={outstanding > 0}
+                    />
                   </li>
                 );
               })}
@@ -394,96 +420,11 @@ function Dashboard() {
           </TabsContent>
         </Tabs>
 
-        {/* Pending Payments Section */}
-        <section aria-label="Pending Payments" className="space-y-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <h2 className="text-lg font-bold">Pending Payments</h2>
-              {pendingPayments.length > 0 && (
-                <span className="rounded-full bg-warning/20 px-2.5 py-0.5 text-xs font-semibold text-warning">
-                  {pendingPayments.length} {pendingPayments.length === 1 ? "Employee" : "Employees"}
-                </span>
-              )}
-            </div>
-            {balancesLoading && <Loader2 className="size-4 animate-spin text-muted-foreground" />}
-          </div>
-
-          {balancesError && (
-            <div className="flex items-center justify-between rounded-xl border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
-              <span>{balancesError}</span>
-              <Button variant="outline" size="sm" onClick={loadDashboard}>
-                Retry
-              </Button>
-            </div>
-          )}
-
-          {!balancesLoading && !balancesError && pendingPayments.length === 0 && (
-            <div className="rounded-xl border-2 border-dashed border-border p-6 text-center text-muted-foreground">
-              <p className="font-medium">No pending payments.</p>
-              <p className="mt-0.5 text-xs text-muted-foreground">All employees have been fully settled.</p>
-            </div>
-          )}
-
-          {!balancesError && pendingPayments.length > 0 && (
-            <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {pendingPayments.map((p) => (
-                <li
-                  key={p.employeeId}
-                  className="flex flex-col rounded-xl border-2 border-border bg-card p-4 shadow-card"
-                >
-                  <div className="flex items-start justify-between gap-2">
-                    <h3 className="break-words text-lg font-bold leading-snug">{p.employeeName}</h3>
-                    <span
-                      className={cn(
-                        "inline-flex shrink-0 items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold",
-                        p.isActive
-                          ? "border-success/30 bg-success-soft text-success"
-                          : "border-border bg-muted text-muted-foreground",
-                      )}
-                    >
-                      {p.isActive ? "Active" : "Inactive"}
-                    </span>
-                  </div>
-
-                  <dl className="mt-3 space-y-1.5 text-sm">
-                    <div className="flex justify-between">
-                      <dt className="text-muted-foreground">Total Earnings:</dt>
-                      <dd className="font-semibold text-foreground">{formatINR(p.totalEarnings)}</dd>
-                    </div>
-                    <div className="flex justify-between">
-                      <dt className="text-muted-foreground">Total Paid:</dt>
-                      <dd className="font-semibold text-success">{formatINR(p.totalPaid)}</dd>
-                    </div>
-                    <div className="flex justify-between border-t border-border pt-1">
-                      <dt className="font-medium text-muted-foreground">Outstanding Balance:</dt>
-                      <dd className="text-base font-bold text-warning">{formatINR(p.outstandingBalance)}</dd>
-                    </div>
-                  </dl>
-
-                  <div className="mt-4 grid gap-2">
-                    <Button
-                      size="xl"
-                      onClick={() => handleRecordPaymentForEmployee(p.employeeId)}
-                      disabled={payingEmpId === String(p.employeeId)}
-                    >
-                      {payingEmpId === String(p.employeeId) ? (
-                        <Loader2 className="animate-spin" />
-                      ) : (
-                        <CreditCard />
-                      )}{" "}
-                      Record Payment
-                    </Button>
-                    <Button size="xl" variant="outline" asChild>
-                      <Link to="/employees/$id" params={{ id: String(p.employeeId) }}>
-                        <History /> View Details
-                      </Link>
-                    </Button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
+        {balancesError && (
+          <p className="rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
+            Employee balance summaries could not be loaded. Payment actions may be limited until you refresh.
+          </p>
+        )}
       </main>
 
       <EmployeeFormDialog

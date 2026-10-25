@@ -14,4 +14,15 @@ describe("App routing", () => {
 
     expect(matches.at(-1)?.routeId).not.toBe(rootRouteId);
   });
+
+  it("matches /dashboard route", () => {
+    const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
+    const matches = router.matchRoutes("/dashboard");
+    expect(matches.at(-1)?.routeId).toContain("dashboard");
+  });
+
+  it("matches employee work history route", () => {
+    const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
+    expect(router.matchRoutes("/employees/1").at(-1)?.routeId).toContain("employees");
+  });
 });

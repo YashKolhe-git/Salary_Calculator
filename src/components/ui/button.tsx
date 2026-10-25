@@ -4,25 +4,73 @@ import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
 
+const focusRing =
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background";
+
+const disabledState =
+  "disabled:pointer-events-none disabled:opacity-55 disabled:shadow-none disabled:active:scale-100";
+
+const iconStyles =
+  "[&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 motion-safe:transition-[color,background-color,box-shadow,transform]";
+
+const primaryFill = cn(
+  "border border-transparent bg-primary text-primary-foreground shadow-sm hover:bg-primary-hover active:bg-primary-active active:scale-[0.98]",
+  focusRing,
+  disabledState,
+  iconStyles,
+  "[&_svg]:text-primary-foreground",
+);
+
+const secondaryFill = cn(
+  "border-2 border-border bg-card text-foreground shadow-sm hover:bg-accent hover:border-accent active:bg-accent/90 active:scale-[0.98]",
+  focusRing,
+  disabledState,
+  iconStyles,
+  "[&_svg]:text-primary",
+);
+
+const ghostFill = cn(
+  "border border-transparent bg-transparent text-foreground hover:bg-accent active:bg-accent/90 active:scale-[0.98]",
+  focusRing,
+  disabledState,
+  iconStyles,
+  "[&_svg]:text-primary",
+);
+
+const linkFill = cn(
+  "border border-transparent bg-transparent text-primary underline-offset-4 hover:underline hover:bg-transparent active:scale-100",
+  focusRing,
+  disabledState,
+  iconStyles,
+  "[&_svg]:text-primary",
+);
+
+const destructiveFill = cn(
+  "border border-transparent bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 active:bg-destructive/80 active:scale-[0.98]",
+  focusRing,
+  disabledState,
+  iconStyles,
+  "[&_svg]:text-destructive-foreground",
+);
+
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-semibold",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground shadow hover:bg-primary/90",
-        destructive: "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
-        outline:
-          "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
-        secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
+        default: primaryFill,
+        destructive: destructiveFill,
+        outline: secondaryFill,
+        secondary: secondaryFill,
+        ghost: ghostFill,
+        link: linkFill,
       },
       size: {
-        default: "h-9 px-4 py-2",
-        sm: "h-8 rounded-md px-3 text-xs",
-        lg: "h-10 rounded-md px-8",
-        xl: "h-12 rounded-lg px-5 text-base font-semibold [&_svg]:size-5",
-        icon: "h-9 w-9",
+        default: "min-h-10 h-10 px-4 py-2",
+        sm: "min-h-9 h-9 rounded-lg px-3 text-xs",
+        lg: "min-h-11 h-11 rounded-lg px-8",
+        xl: "min-h-12 h-12 rounded-lg px-5 text-base font-semibold [&_svg]:size-5",
+        icon: "size-10 min-h-10 w-10 shrink-0",
       },
     },
     defaultVariants: {
