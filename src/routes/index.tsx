@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Eye, EyeOff, Loader2, Wallet } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Field, bigInput } from "@/components/shared";
 import { authService } from "@/services/authService";
@@ -9,12 +9,12 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Login — Daily Wage Calculator" },
+      { title: "Login — RS Records" },
       {
         name: "description",
         content: "Sign in to manage employees, working hours and daily wages.",
       },
-      { property: "og:title", content: "Daily Wage Calculator" },
+      { property: "og:title", content: "RS Records" },
       { property: "og:description", content: "Manage employees and daily wages from your phone." },
     ],
   }),
@@ -56,11 +56,18 @@ function LoginPage() {
     <main className="flex min-h-dvh items-center justify-center px-4 py-10">
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 flex size-14 items-center justify-center rounded-2xl border-2 border-border">
-            <Wallet className="size-7 text-primary" />
-          </div>
-          <h1 className="text-2xl font-bold">Daily Wage Calculator</h1>
-          <p className="mt-1 text-muted-foreground">Manage employees and daily wages.</p>
+          <img
+            src="/logo.svg"
+            alt=""
+            width={80}
+            height={80}
+            decoding="async"
+            className="mx-auto mb-4 size-16 object-contain sm:size-20"
+          />
+          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">RS Records</h1>
+          <p className="mt-2 text-sm text-muted-foreground sm:text-base">
+            Manage employees and daily wages.
+          </p>
         </div>
         <form
           onSubmit={submit}
